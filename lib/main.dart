@@ -3,8 +3,10 @@ import 'package:http/http.dart' as http; // using HTTP communication
 import 'dart:async'; // using asynchronous
 import 'dart:convert'; // using JSON
 
-const request = "https://api.hgbrasil.com/finance?format=json&key=ec191454";
+// Api url (Application Programming Interface)
+const url = "https://api.hgbrasil.com/finance?format=json&key=ec191454";
 
+// Start application
 void main() async {
   runApp(MyApp());
 }
@@ -19,11 +21,17 @@ Widget MyApp() {
   );
 }
 
+// Request data from api
 Future<Map> getData() async {
-  http.Response response = await http.get(request);
+
+  // Request http (method GET)
+  http.Response response = await http.get(url);
+
+  // Return data format as Map (JSON)
   return json.decode(response.body);
 }
 
+// Widget main (Stateful)
 class Home extends StatefulWidget {
   @override
   _HomeState createState() {
@@ -31,6 +39,7 @@ class Home extends StatefulWidget {
   }
 }
 
+// My widget
 class _HomeState extends State<Home> {
 
   final realController = TextEditingController();
@@ -41,12 +50,17 @@ class _HomeState extends State<Home> {
   double euro;
 
   void _realChanged(String txt) {
+
+    // Check if is empty
     if(txt.isEmpty) {
       _clearAll();
       return;
     }
 
+    // Convert string to double
     double real = double.parse(txt);
+
+    // Convert real to dollar/euro
     dollarController.text = (real/dollar).toStringAsFixed(2);
     euroController.text = (real/euro).toStringAsFixed(2);
   }
@@ -57,22 +71,31 @@ class _HomeState extends State<Home> {
       return;
     }
 
+    // Convert string to double
     double dollar = double.parse(txt);
+
+    // Convert dollar to real/euro
     realController.text = (dollar * this.dollar).toStringAsFixed(2);
     euroController.text = (dollar * this.dollar / euro).toStringAsFixed(2);
   }
 
   void _euroChanged(String txt) {
+
+    // Check if is empty
     if(txt.isEmpty) {
       _clearAll();
       return;
     }
 
+    // Convert string to double
     double euro = double.parse(txt);
+
+    // Convert euro to real/dollar
     realController.text = (euro * this.euro).toStringAsFixed(2);
     dollarController.text = (euro * this.euro / dollar).toStringAsFixed(2);
   }
 
+  // Clean input data
   void _clearAll() {
     realController.text = "";
     dollarController.text = "";
@@ -81,6 +104,8 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+
+    // Screen
     return Scaffold(
       backgroundColor: Colors.black54,
       appBar: AppBar(
@@ -103,6 +128,7 @@ class _HomeState extends State<Home> {
                 );
               default:
                 if(snapshot.hasError) {
+                  // Failed in get data
                   return Center(
                     child: Text(
                       "Erro ao Carregar Dados :(",
@@ -115,6 +141,7 @@ class _HomeState extends State<Home> {
                   );
                 }else {
 
+                  // Get specific data
                   dollar = snapshot.data["results"]["currencies"]["USD"]["buy"];
                   euro   = snapshot.data["results"]["currencies"]["EUR"]["buy"];
 
@@ -139,6 +166,7 @@ class _HomeState extends State<Home> {
   }
 }
 
+// Widget fragment
 Widget buildTextField(String label, String prefix, TextEditingController txtController, Function txtChanged) {
   return TextField(
     controller: txtController,
