@@ -1,6 +1,6 @@
-# my_currency
+# My Currency
 
-A new Flutter application.
+A flutter application with the aim of practicing.
 
 ## Getting Started
 
